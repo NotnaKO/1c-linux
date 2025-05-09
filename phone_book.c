@@ -26,7 +26,7 @@ long get_user_info(const char* surname, user_data_t* output_data) {
   user_data_node_t* res = container_of(node, user_data_node_t, node);
   pr_info("user %s %s\n", res->user.name, res->user.surname);
 
-  memcpy(output_data, &res->user, sizeof(user_data_node_t));
+  memcpy(output_data, &res->user, sizeof(user_data_t));
 
   return 0;
 }
