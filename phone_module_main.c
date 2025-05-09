@@ -93,7 +93,7 @@ void try_parse_write_command(void);
 // Write can be made gradually (therefore offset if provided to write function).
 // So parsing instruction may fail and we "try" to parse it.
 void try_parse_write_command(void) {
-  char* cmd = kmalloc(COMMAND_MAX_LEN + 1, GFP_KERNEL);
+  char cmd[COMMAND_MAX_LEN + 1];
 
   if (sscanf(device_buf, "%s", cmd) != 1) {
     pr_info("read command failed\n");
