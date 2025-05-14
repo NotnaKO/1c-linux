@@ -15,11 +15,8 @@ add_executable(phone_handbook_module
         phone_module_main.c
         phone_book.c
 )
-#add_executable(phone_handbook_syscall
-#        phone_book.c
-#        ${COMMON_SOURCES}
-#)
+add_executable(keyboard_module keyboard_main.c)
 
 target_include_directories("phone_handbook_module" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
+target_include_directories("keyboard_module" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
 
-#target_include_directories("phone_handbook_syscall" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
