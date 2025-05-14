@@ -20,7 +20,6 @@ static void count_characters(struct timer_list* timer) {
 
 static irqreturn_t keyboard_handler(int irq, void* dev_id) {
   atomic_inc(&char_count);
-  pr_info("Keyboard interrupt\n");
   return IRQ_NONE;
 }
 
