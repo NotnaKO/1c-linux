@@ -7,6 +7,9 @@ keyboard_module-y := keyboard_main.o
 # task 4
 obj-m += mmaneg_module.o
 mmaneg_module-y := mmaneg_module_main.o
+# task 5
+obj-m += fifo_module.o
+fifo_module-y := fifo_module_main.o
 
 KERNEL_DIR := /home/anton/linux_course/linux-6.14.5
 MODULE_DIR := $(shell pwd)
