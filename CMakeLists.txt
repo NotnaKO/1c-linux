@@ -16,7 +16,10 @@ add_executable(phone_handbook_module
         phone_book.c
 )
 add_executable(keyboard_module keyboard_main.c)
+add_executable(mmaneg_module mmaneg_module_main.c)
+
 
 target_include_directories("phone_handbook_module" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
 target_include_directories("keyboard_module" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
+target_include_directories("mmaneg_module" PRIVATE ${KERNELHEADERS_INCLUDE_DIRS})
 
