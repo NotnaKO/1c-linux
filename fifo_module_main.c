@@ -1,12 +1,12 @@
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/fs.h>
 #include <linux/cdev.h>
-#include <linux/slab.h>
-#include <linux/wait.h>
-#include <linux/mutex.h>
+#include <linux/fs.h>
+#include <linux/kernel.h>
 #include <linux/kfifo.h>
+#include <linux/module.h>
+#include <linux/mutex.h>
+#include <linux/slab.h>
 #include <linux/uaccess.h>
+#include <linux/wait.h>
 
 
 MODULE_LICENSE("GPL");
