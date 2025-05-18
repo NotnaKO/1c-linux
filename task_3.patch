@@ -1,0 +1,64 @@
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 7feb8f41a..fe6e9e8dc 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -523,6 +523,12 @@ static int proc_pid_schedstat(struct seq_file *m, struct pid_namespace *ns,
+ }
+ #endif
+ 
++static int proc_pid_sched_count(struct seq_file *m, struct pid_namespace *ns,
++                                struct pid *pid, struct task_struct *task) {
++    seq_printf(m, "%u\n", atomic_read(&task->sched_count));
++    return 0;
++}
++
+ #ifdef CONFIG_LATENCYTOP
+ static int lstats_show_proc(struct seq_file *m, void *v)
+ {
+@@ -3327,6 +3333,7 @@ static const struct pid_entry tgid_base_stuff[] = {
+ 	DIR("net",        S_IRUGO|S_IXUGO, proc_net_inode_operations, proc_net_operations),
+ #endif
+ 	REG("environ",    S_IRUSR, proc_environ_operations),
++	ONE("sched_count", S_IRUGO, proc_pid_sched_count),
+ 	REG("auxv",       S_IRUSR, proc_auxv_operations),
+ 	ONE("status",     S_IRUGO, proc_pid_status),
+ 	ONE("personality", S_IRUSR, proc_pid_personality),
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 6e5c38718..69df34b7d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -881,6 +881,7 @@ struct task_struct {
+ #endif
+ 
+ 	struct sched_statistics         stats;
++	atomic_t sched_count;
+ 
+ #ifdef CONFIG_PREEMPT_NOTIFIERS
+ 	/* List of struct preempt_notifier: */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index ca2ca3884..392b4e9a3 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2238,6 +2238,8 @@ __latent_entropy struct task_struct *copy_process(
+ 	if (!p)
+ 		goto fork_out;
+ 	p->flags &= ~PF_KTHREAD;
++	atomic_set(&p->sched_count, 0);
++
+ 	if (args->kthread)
+ 		p->flags |= PF_KTHREAD;
+ 	if (args->user_worker) {
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3c7c942c7..aebcd91c6 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6715,6 +6715,9 @@ static void __sched notrace __schedule(int sched_mode)
+ 	}
+ 
+ 	next = pick_next_task(rq, prev, &rf);
++	if (next) {
++		atomic_inc(&next->sched_count);
++	}
+ 	rq_set_donor(rq, next);
+ picked:
+ 	clear_tsk_need_resched(prev);
